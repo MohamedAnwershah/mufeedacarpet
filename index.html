@@ -1,130 +1,297 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mufeeda Carpet — Premium Carpets & Rugs</title>
-  <meta name="description" content="Mufeeda Carpets — Premium rugs, custom rugs and sustainable carpet choices across Tamil Nadu." />
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mufeeda Carpet</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        'brand-black': '#000000',
+                        'brand-gray': '#F7F7F7',
+                        'text-dark': '#1a1a1a',
+                        'text-light': '#666666',
+                    },
+                    fontSize: {
+                        'xxs': '0.625rem', // 10px
+                    },
+                    letterSpacing: {
+                        'widest': '0.15em',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Hover Underline Animation */
+        .hover-underline-animation {
+            position: relative;
+        }
+        .hover-underline-animation::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -4px;
+            left: 0;
+            background-color: currentColor;
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+        .hover-underline-animation:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Mobile Menu Animation Styles */
+        #mobile-menu {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out, padding 0.4s;
+        }
+        /* This class is toggled by JS */
+        #mobile-menu.open {
+            max-height: 400px; 
+            opacity: 1;
+        }
+    </style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <div class="logo">
-        <img src="assets/logo.png" alt="Mufeeda Carpets logo" />
-      </div>
-      <nav class="main-nav">
-        <a href="#about">About</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <a class="cta-whatsapp" href="https://wa.me/918122022641" target="_blank" rel="noopener">Chat on WhatsApp</a>
-    </div>
-  </header>
+<body class="bg-white text-text-dark font-sans antialiased relative">
 
-  <main>
-    <section class="hero">
-      <div class="hero-inner wrap">
-        <div>
-          <h1 class="brand-title">MUFEEDA<br/>CARPET</h1>
-          <h2 class="hero-sub">E l e g a n c e &nbsp;&amp;&nbsp; C o m f o r t&nbsp; f o r &nbsp; E v e r y &nbsp; F l o o r.</h2>
-          <p class="hero-cta">
-            <a class="btn" href="#gallery">View Gallery</a>
-          </p>
-          <div class="hero-badges">
-            <div class="badge">Premium Rugs</div>
-            <div class="badge">Local Craft</div>
-            <div class="badge">Sustainable</div>
-          </div>
+    <!-- Header -->
+    <header class="bg-brand-black text-white px-6 md:px-12 py-5 flex flex-wrap items-center justify-between sticky top-0 z-50 transition-shadow duration-300 shadow-md">
+        
+        <!-- Wrapper for Logo and Button -->
+        <div class="flex items-center justify-between w-full md:w-auto">
+            <div class="flex items-center gap-12">
+                <!-- LOGO CHANGE: Replace src with your actual logo path -->
+                <a href="#" aria-label="Home">
+                    <img src="assets/logo-white.png" alt="Mufeeda Carpet Logo" class="h-7 w-auto object-contain">
+                </a>
+                
+                <!-- Nav Desktop -->
+                <nav class="hidden md:flex gap-8 text-xxs uppercase tracking-widest font-medium">
+                    <a href="#about" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">About</a>
+                    <a href="#gallery" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">Gallery</a>
+                    <a href="#contact" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">Contact</a>
+                </nav>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden text-white focus:outline-none p-2 border border-transparent hover:border-gray-700 rounded transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
         </div>
-        <div class="hero-image">
-          <img src="assets/hero-1.jpg" alt="Premium rugs in living room" />
+        
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="w-full md:hidden">
+            <nav class="flex flex-col gap-6 py-8 border-t border-gray-800 mt-4 text-center text-sm font-serif tracking-widest">
+                <a href="#about" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">About</a>
+                <a href="#gallery" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">Gallery</a>
+                <a href="#contact" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">Contact</a>
+            </nav>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <section id="about" class="about wrap">
-      <h2>About Us</h2>
-      <p>
-        Our journey began with a clear vision — to deliver beautiful, long-lasting carpets at honest prices. Over the 10 years, our passion and experience have transformed us from a small startup into a trusted name in the carpet industry. Today, we proudly offer a curated range of premium styles, textures, and designs that bring comfort, elegance, and quality to every space we serve.
-      </p>
+    <main>
+        <!-- Hero Section -->
+        <section class="px-6 md:px-12 pt-16 pb-20 flex flex-col items-center text-center reveal-on-scroll">
+            <div class="mb-8">
+                <h1 class="font-serif text-4xl md:text-4xl font-bold text-brand-black mb-2">Mufeeda Carpet</h1>
+                <p class="font-inter text-text-light text-lg md:text-xl">Elegance & Comfort for Every Floor.</p>
+            </div>
+            
+            <a href="#gallery" class="bg-brand-black text-white text-xxs uppercase tracking-widest font-medium px-8 py-3 rounded-full hover:bg-gray-600 transition-all duration-300 mb-16 inline-block">
+                View Gallery
+            </a>
 
-      <div class="trust-grid">
-        <div class="trust-item">
-          <h4>Trusted By</h4>
-          <ul>
-            <li>Happy Homes</li>
-            <li>Interior Studios</li>
-            <li>Architect Partners</li>
-          </ul>
+            <!-- HERO VIDEO CHANGE: Replace src with your video -->
+            <div class="w-full max-w-5xl aspect-[16/9] bg-black rounded-lg relative shadow-xl overflow-hidden group">
+                 <video 
+                    class="w-full h-full object-cover" 
+                    autoplay 
+                    muted 
+                    loop 
+                    playsinline
+                    poster="assets/hero-poster.jpg"> <!-- Optional: Add a placeholder image while video loads -->
+                    <source src="assets/hero-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                 </video>
+
+                 <!-- Floating Label -->
+                <div class="absolute top-1/2 -right-4 transform -translate-y-1/2 translate-x-full hidden lg:flex items-center gap-2 bg-white py-2 px-3 rounded shadow-sm z-10">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-xxs font-bold text-text-dark">Mr. Daveed Khan</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="px-6 md:px-12 py-16 max-w-5xl mx-auto scroll-mt-24 reveal-on-scroll">
+            <div class="mb-8">
+                <div class="flex flex-col items-start mb-4">
+                    <!-- ABOUT LOGO CHANGE: Centered logo above About Us -->
+                    <img src="assets/logo-black.png" alt="Mufeeda Carpet Logo" class="h-10 w-auto object-contain mb-2">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-black leading-none text-center">Mufeeda<br>Carpet</span>
+                </div>
+                <h2 class="font-bold text-xl md:text-2xl text-brand-black">About Us</h2>
+            </div>
+            <div class="max-w-2xl">
+                <p class="text-sm text-text-light leading-relaxed mb-6">
+                    Our journey began with a clear vision — to deliver beautiful, long-lasting carpets at honest prices. Over the 15 years, our passion and experience have transformed what was once a small trading firm into a trusted name in the world of flooring. Today, we proudly offer a diverse range of premium styles, textures, and designs that bring comfort, elegance, and quality to every space we touch.
+                </p>
+            </div>
+        </section>
+
+        <!-- Product Sections / Gallery -->
+        <section id="gallery" class="px-6 md:px-12 py-12 max-w-5xl mx-auto flex flex-col gap-24 scroll-mt-24">
+            
+            <!-- Product 1 -->
+            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 reveal-on-scroll">
+                <div class="flex-1 max-w-md">
+                    <h3 class="font-bold text-xl text-brand-black mb-4">Vinyl Flooring for Workspaces</h3>
+                    <p class="text-sm text-text-light leading-relaxed">
+                        Our vinyl flooring is designed to enhance modern workspaces by combining professional style with long-lasting performance. With a stylish, sleek appearance, low maintenance, and high durability, it withstands daily traffic while keeping the floor looking fresh and professional for years.
+                    </p>
+                </div>
+                <div class="flex-1 w-full group">
+                    <!-- VIDEO 1 CHANGE -->
+                    <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 ml-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
+                        <source src="assets/vinyl-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20 reveal-on-scroll">
+                <div class="flex-1 max-w-md">
+                    <h3 class="font-bold text-xl text-brand-black mb-4">2/2 Carpet for Modern Workspaces</h3>
+                    <p class="text-sm text-text-light leading-relaxed">
+                        Our 2/2 Carpet delivers a clean, modern look ideal for IT companies and start-up offices. Its strong woven texture handles heavy foot traffic, rolling chairs, and daily activity while keeping the space quiet and comfortable.
+                    </p>
+                </div>
+                <div class="flex-1 w-full group">
+                     <!-- VIDEO 2 CHANGE -->
+                     <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 mr-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
+                        <source src="assets/carpet-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 reveal-on-scroll">
+                <div class="flex-1 max-w-md">
+                    <h3 class="font-bold text-xl text-brand-black mb-4">Sports & Outdoor Grass Mats</h3>
+                    <p class="text-sm text-text-light leading-relaxed">
+                        Designed for versatility and performance, our Grass Mats provide a durable, cushioned, and visually distinct solution for play areas, sports fields and outdoor spaces.
+                    </p>
+                </div>
+                <div class="flex-1 w-full group">
+                     <!-- VIDEO 3 CHANGE -->
+                     <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 ml-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
+                        <source src="assets/grass-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="px-6 md:px-12 py-20 bg-white reveal-on-scroll">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="font-bold text-xl md:text-2xl text-brand-black mb-1">What Clients Say</h2>
+                <p class="text-text-light text-base">Trusted across Tamil Nadu</p>
+            </div>
+
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-brand-gray p-8 rounded-xl flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">
+                    <p class="text-sm text-text-light leading-relaxed mb-6">"Living room was transformed. Exceptional quality and service."</p>
+                    <div>
+                        <p class="font-bold text-sm text-brand-black">A. Raman</p>
+                        <p class="text-xxs text-text-light mt-0.5">Coimbatore</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-brand-gray p-8 rounded-xl flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">
+                    <p class="text-sm text-text-light leading-relaxed mb-6">"Delivered the exact rug of our dreams, perfect fit and trim."</p>
+                    <div>
+                        <p class="font-bold text-sm text-brand-black">S. Latha</p>
+                        <p class="text-xxs text-text-light mt-0.5">Chennai</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-brand-gray p-8 rounded-xl flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">
+                    <p class="text-sm text-text-light leading-relaxed mb-6">"Incredible selection and a warm, responsive team."</p>
+                    <div>
+                        <p class="font-bold text-sm text-brand-black">K. Prasad</p>
+                        <p class="text-xxs text-text-light mt-0.5">Madurai</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section id="contact" class="px-6 md:px-12 py-24 text-center scroll-mt-20 reveal-on-scroll">
+            <h2 class="font-bold text-xl md:text-2xl text-brand-black mb-1">Contact Us</h2>
+            <p class="text-text-light text-lg mb-8">Message or WhatsApp us anytime.</p>
+            <a href="https://wa.me/918825599044" target="_blank" class="bg-brand-black text-white text-xxs uppercase tracking-widest font-medium px-10 py-3 rounded-full hover:bg-gray-600 transition-all duration-300 inline-block">
+                Chat on WhatsApp
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-black text-white px-6 md:px-12 py-16">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+            <!-- FOOTER LOGO CHANGE -->
+            <div>
+                <img src="assets/logo-white.png" alt="Mufeeda Carpet Logo" class="h-10 w-auto object-contain">
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="flex flex-col md:flex-row gap-12 md:gap-32 text-xxs leading-loose text-gray-400">
+                <div>
+                    <h4 class="text-white font-bold mb-3 uppercase tracking-widest">Contact</h4>
+                    <p class="mb-1">
+                        <a href="mailto:mufeedacarpet@gmail.com" class="hover:text-white transition-colors">mufeedacarpet@gmail.com</a>
+                    </p>
+                    <p class="mb-1">
+                        <a href="tel:+918825599044" class="hover:text-white transition-colors">+91 882 559 9044</a>
+                    </p>
+                    <p>Chennai, India</p>
+                </div>
+                <div>
+                    <p>© 2024 - 2025 Mufeeda Carpets</p>
+                    <p>All Rights Reserved</p>
+                    <a href="#" class="hover:text-white transition-colors underline-offset-4">Privacy Policy</a>
+                </div>
+            </div>
         </div>
+    </footer>
 
-        <div class="services">
-          <h4>Services</h4>
-          <ul>
-            <li>Custom Rugs</li>
-            <li>Repair</li>
-            <li>Sustainability</li>
-          </ul>
-        </div>
+    <!-- Link to the JavaScript File -->
+    <script src="script.js"></script>
 
-        <div class="features">
-          <h4>Premium Quality</h4>
-          <p>Our collections feature superior materials and artisan craftsmanship.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="gallery" class="gallery wrap">
-      <h2>Gallery</h2>
-      <div class="gallery-grid">
-        <img src="assets/gallery-1.jpg" alt="Rug 1" />
-        <img src="assets/gallery-2.jpg" alt="Rug 2" />
-        <img src="assets/gallery-3.jpg" alt="Rug 3" />
-        <img src="assets/gallery-4.jpg" alt="Rug 4" />
-      </div>
-    </section>
-
-    <section class="testimonials wrap">
-      <h2>What Clients Say</h2>
-      <div class="testi-grid">
-        <blockquote>
-          <p>Our living room was transformed. Exceptional quality and service!</p>
-          <cite>A. Kumar — Tiruchirappalli</cite>
-        </blockquote>
-
-        <blockquote>
-          <p>Delivered the custom rug of our dreams, perfect fit and finish.</p>
-          <cite>S. Latha — Chennai</cite>
-        </blockquote>
-
-        <blockquote>
-          <p>Incredible selection and a warm, responsive team.</p>
-          <cite>K. Prasad — Coimbatore</cite>
-        </blockquote>
-      </div>
-    </section>
-
-    <section id="contact" class="contact wrap">
-      <h2>Contact Us</h2>
-      <p>Message or WhatsApp us anytime.</p>
-      <p><a class="btn-outline" href="https://wa.me/918122022641" target="_blank" rel="noopener">Chat on WhatsApp</a></p>
-
-      <div class="contact-details">
-        <p><strong>Contact</strong></p>
-        <p>mufeeda.carpet@gmail.com</p>
-        <p>+91 81220 22641</p>
-        <p>Chennai, India</p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>© 2015–2025 Mufeeda Carpets. All Rights Reserved.</p>
-    </div>
-  </footer>
-
-  <script src="scripts.js"></script>
 </body>
 </html>
