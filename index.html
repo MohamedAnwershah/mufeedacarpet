@@ -1,297 +1,459 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mufeeda Carpet</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mufeeda Carpet</title>
+  <link rel="icon" href="assets/logo-white.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'sans': ['Inter', 'sans-serif'],
-                        'serif': ['Playfair Display', 'serif'],
-                    },
-                    colors: {
-                        'brand-black': '#000000',
-                        'brand-gray': '#F7F7F7',
-                        'text-dark': '#1a1a1a',
-                        'text-light': '#666666',
-                    },
-                    fontSize: {
-                        'xxs': '0.625rem', // 10px
-                    },
-                    letterSpacing: {
-                        'widest': '0.15em',
-                    }
-                }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'serif': ['Playfair Display', 'serif'],
+          },
+          colors: {
+            'brand-black': '#000000',
+            'brand-gray': '#F7F7F7',
+            'text-dark': '#1a1a1a',
+            'text-light': '#666666',
+          },
+          fontSize: {
+            'xxs': '0.625rem', // 10px
+          },
+          letterSpacing: {
+            'widest': '0.15em',
+          },
+          animation: {
+            'marquee': 'marquee 40s linear infinite',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-50%)' },
             }
+          }
         }
-    </script>
+      }
+    }
+  </script>
 
-    <style>
-        /* Hover Underline Animation */
-        .hover-underline-animation {
-            position: relative;
-        }
-        .hover-underline-animation::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 1px;
-            bottom: -4px;
-            left: 0;
-            background-color: currentColor;
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out;
-        }
-        .hover-underline-animation:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
+  <style>
+    /* Hover Underline Animation */
+    .hover-underline-animation {
+      position: relative;
+    }
+    .hover-underline-animation::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      transform: scaleX(0);
+      height: 1px;
+      bottom: -4px;
+      left: 0;
+      background-color: currentColor;
+      transform-origin: bottom right;
+      transition: transform 0.3s ease-out;
+    }
+    .hover-underline-animation:hover::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
 
-        /* Mobile Menu Animation Styles */
-        #mobile-menu {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out, padding 0.4s;
-        }
-        /* This class is toggled by JS */
-        #mobile-menu.open {
-            max-height: 400px; 
-            opacity: 1;
-        }
-    </style>
+    /* Mobile Menu Animation Styles (JS measures height; avoid fixed max-height) */
+    #mobile-menu {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.45s ease-in-out, opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+    #mobile-menu.open {
+      opacity: 1;
+      pointer-events: auto;
+      /* max-height set dynamically by JS using scrollHeight */
+    }
+
+    /* Pause animation on hover */
+    .hover\:pause:hover {
+      animation-play-state: paused;
+    }
+
+    /* small utility: ensure reveal helpers start hidden */
+    .opacity-0 { opacity: 0; }
+    .opacity-100 { opacity: 1; }
+    .translate-y-10 { transform: translateY(2.5rem); }
+    .translate-y-0 { transform: translateY(0); }
+    .transition-all { transition: all .3s ease; }
+    .duration-1000 { transition-duration: 1000ms; }
+
+    /* Minor visual fallback for browsers without Tailwind loaded yet */
+    body { font-family: Inter, sans-serif; }
+  </style>
 </head>
+
 <body class="bg-white text-text-dark font-sans antialiased relative">
 
-    <!-- Header -->
-    <header class="bg-brand-black text-white px-6 md:px-12 py-5 flex flex-wrap items-center justify-between sticky top-0 z-50 transition-shadow duration-300 shadow-md">
-        
-        <!-- Wrapper for Logo and Button -->
-        <div class="flex items-center justify-between w-full md:w-auto">
-            <div class="flex items-center gap-12">
-                <!-- LOGO CHANGE: Replace src with your actual logo path -->
-                <a href="#" aria-label="Home">
-                    <img src="assets/logo-white.png" alt="Mufeeda Carpet Logo" class="h-7 w-auto object-contain">
-                </a>
-                
-                <!-- Nav Desktop -->
-                <nav class="hidden md:flex gap-8 text-xxs uppercase tracking-widest font-medium">
-                    <a href="#about" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">About</a>
-                    <a href="#gallery" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">Gallery</a>
-                    <a href="#contact" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">Contact</a>
-                </nav>
-            </div>
+  <header class="bg-brand-black text-white px-6 md:px-12 py-5 sticky top-0 z-50 transition-shadow duration-300 shadow-md">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-12">
+        <a href="#" aria-label="Home" class="flex items-center gap-2">
+          <img src="assets/logo-white.png" alt="Mufeeda Carpet Logo" class="h-8 w-auto object-contain">
+        </a>
 
-            <!-- Mobile Menu Button -->
-            <button id="menu-btn" class="md:hidden text-white focus:outline-none p-2 border border-transparent hover:border-gray-700 rounded transition-colors cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-        </div>
-        
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="w-full md:hidden">
-            <nav class="flex flex-col gap-6 py-8 border-t border-gray-800 mt-4 text-center text-sm font-serif tracking-widest">
-                <a href="#about" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">About</a>
-                <a href="#gallery" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">Gallery</a>
-                <a href="#contact" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">Contact</a>
-            </nav>
-        </div>
-    </header>
+        <nav class="hidden md:flex gap-8 text-xxs uppercase tracking-widest font-medium">
+          <a href="#about" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">About</a>
+          <a href="#gallery" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">Gallery</a>
+          <a href="#contact" class="hover-underline-animation text-gray-300 hover:text-white transition-colors">Contact</a>
+        </nav>
+      </div>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="px-6 md:px-12 pt-16 pb-20 flex flex-col items-center text-center reveal-on-scroll">
-            <div class="mb-8">
-                <h1 class="font-serif text-4xl md:text-4xl font-bold text-brand-black mb-2">Mufeeda Carpet</h1>
-                <p class="font-inter text-text-light text-lg md:text-xl">Elegance & Comfort for Every Floor.</p>
-            </div>
-            
-            <a href="#gallery" class="bg-brand-black text-white text-xxs uppercase tracking-widest font-medium px-8 py-3 rounded-full hover:bg-gray-600 transition-all duration-300 mb-16 inline-block">
-                View Gallery
+      <div class="flex items-center gap-6">
+        <div class="hidden md:flex items-center gap-4">
+          <a href="https://wa.me/918122022641" target="_blank" aria-label="WhatsApp" class="text-gray-300 hover:text-green-400 transition-colors">
+            <!-- whatsapp svg -->
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/mufeeda.carpet/" target="_blank" aria-label="Instagram" class="text-gray-300 hover:text-pink-500 transition-colors">
+            <!-- instagram svg -->
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
-
-            <!-- HERO VIDEO CHANGE: Replace src with your video -->
-            <div class="w-full max-w-5xl aspect-[16/9] bg-black rounded-lg relative shadow-xl overflow-hidden group">
-                 <video 
-                    class="w-full h-full object-cover" 
-                    autoplay 
-                    muted 
-                    loop 
-                    playsinline
-                    poster="assets/hero-poster.jpg"> <!-- Optional: Add a placeholder image while video loads -->
-                    <source src="assets/hero-video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                 </video>
-
-                 <!-- Floating Label -->
-                <div class="absolute top-1/2 -right-4 transform -translate-y-1/2 translate-x-full hidden lg:flex items-center gap-2 bg-white py-2 px-3 rounded shadow-sm z-10">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-xxs font-bold text-text-dark">Mr. Daveed Khan</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Us Section -->
-        <section id="about" class="px-6 md:px-12 py-16 max-w-5xl mx-auto scroll-mt-24 reveal-on-scroll">
-            <div class="mb-8">
-                <div class="flex flex-col items-start mb-4">
-                    <!-- ABOUT LOGO CHANGE: Centered logo above About Us -->
-                    <img src="assets/logo-black.png" alt="Mufeeda Carpet Logo" class="h-10 w-auto object-contain mb-2">
-                    <span class="text-xs font-bold uppercase tracking-widest text-brand-black leading-none text-center">Mufeeda<br>Carpet</span>
-                </div>
-                <h2 class="font-bold text-xl md:text-2xl text-brand-black">About Us</h2>
-            </div>
-            <div class="max-w-2xl">
-                <p class="text-sm text-text-light leading-relaxed mb-6">
-                    Our journey began with a clear vision — to deliver beautiful, long-lasting carpets at honest prices. Over the 15 years, our passion and experience have transformed what was once a small trading firm into a trusted name in the world of flooring. Today, we proudly offer a diverse range of premium styles, textures, and designs that bring comfort, elegance, and quality to every space we touch.
-                </p>
-            </div>
-        </section>
-
-        <!-- Product Sections / Gallery -->
-        <section id="gallery" class="px-6 md:px-12 py-12 max-w-5xl mx-auto flex flex-col gap-24 scroll-mt-24">
-            
-            <!-- Product 1 -->
-            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 reveal-on-scroll">
-                <div class="flex-1 max-w-md">
-                    <h3 class="font-bold text-xl text-brand-black mb-4">Vinyl Flooring for Workspaces</h3>
-                    <p class="text-sm text-text-light leading-relaxed">
-                        Our vinyl flooring is designed to enhance modern workspaces by combining professional style with long-lasting performance. With a stylish, sleek appearance, low maintenance, and high durability, it withstands daily traffic while keeping the floor looking fresh and professional for years.
-                    </p>
-                </div>
-                <div class="flex-1 w-full group">
-                    <!-- VIDEO 1 CHANGE -->
-                    <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 ml-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
-                        <source src="assets/vinyl-video.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20 reveal-on-scroll">
-                <div class="flex-1 max-w-md">
-                    <h3 class="font-bold text-xl text-brand-black mb-4">2/2 Carpet for Modern Workspaces</h3>
-                    <p class="text-sm text-text-light leading-relaxed">
-                        Our 2/2 Carpet delivers a clean, modern look ideal for IT companies and start-up offices. Its strong woven texture handles heavy foot traffic, rolling chairs, and daily activity while keeping the space quiet and comfortable.
-                    </p>
-                </div>
-                <div class="flex-1 w-full group">
-                     <!-- VIDEO 2 CHANGE -->
-                     <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 mr-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
-                        <source src="assets/carpet-video.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 reveal-on-scroll">
-                <div class="flex-1 max-w-md">
-                    <h3 class="font-bold text-xl text-brand-black mb-4">Sports & Outdoor Grass Mats</h3>
-                    <p class="text-sm text-text-light leading-relaxed">
-                        Designed for versatility and performance, our Grass Mats provide a durable, cushioned, and visually distinct solution for play areas, sports fields and outdoor spaces.
-                    </p>
-                </div>
-                <div class="flex-1 w-full group">
-                     <!-- VIDEO 3 CHANGE -->
-                     <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 ml-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
-                        <source src="assets/grass-video.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Testimonials Section -->
-        <section class="px-6 md:px-12 py-20 bg-white reveal-on-scroll">
-            <div class="max-w-4xl mx-auto text-center mb-12">
-                <h2 class="font-bold text-xl md:text-2xl text-brand-black mb-1">What Clients Say</h2>
-                <p class="text-text-light text-base">Trusted across Tamil Nadu</p>
-            </div>
-
-            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="bg-brand-gray p-8 rounded-xl flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">
-                    <p class="text-sm text-text-light leading-relaxed mb-6">"Living room was transformed. Exceptional quality and service."</p>
-                    <div>
-                        <p class="font-bold text-sm text-brand-black">A. Raman</p>
-                        <p class="text-xxs text-text-light mt-0.5">Coimbatore</p>
-                    </div>
-                </div>
-                <!-- Card 2 -->
-                <div class="bg-brand-gray p-8 rounded-xl flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">
-                    <p class="text-sm text-text-light leading-relaxed mb-6">"Delivered the exact rug of our dreams, perfect fit and trim."</p>
-                    <div>
-                        <p class="font-bold text-sm text-brand-black">S. Latha</p>
-                        <p class="text-xxs text-text-light mt-0.5">Chennai</p>
-                    </div>
-                </div>
-                <!-- Card 3 -->
-                <div class="bg-brand-gray p-8 rounded-xl flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">
-                    <p class="text-sm text-text-light leading-relaxed mb-6">"Incredible selection and a warm, responsive team."</p>
-                    <div>
-                        <p class="font-bold text-sm text-brand-black">K. Prasad</p>
-                        <p class="text-xxs text-text-light mt-0.5">Madurai</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact CTA Section -->
-        <section id="contact" class="px-6 md:px-12 py-24 text-center scroll-mt-20 reveal-on-scroll">
-            <h2 class="font-bold text-xl md:text-2xl text-brand-black mb-1">Contact Us</h2>
-            <p class="text-text-light text-lg mb-8">Message or WhatsApp us anytime.</p>
-            <a href="https://wa.me/918825599044" target="_blank" class="bg-brand-black text-white text-xxs uppercase tracking-widest font-medium px-10 py-3 rounded-full hover:bg-gray-600 transition-all duration-300 inline-block">
-                Chat on WhatsApp
-            </a>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-brand-black text-white px-6 md:px-12 py-16">
-        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
-            <!-- FOOTER LOGO CHANGE -->
-            <div>
-                <img src="assets/logo-white.png" alt="Mufeeda Carpet Logo" class="h-10 w-auto object-contain">
-            </div>
-            
-            <!-- Contact Info -->
-            <div class="flex flex-col md:flex-row gap-12 md:gap-32 text-xxs leading-loose text-gray-400">
-                <div>
-                    <h4 class="text-white font-bold mb-3 uppercase tracking-widest">Contact</h4>
-                    <p class="mb-1">
-                        <a href="mailto:mufeedacarpet@gmail.com" class="hover:text-white transition-colors">mufeedacarpet@gmail.com</a>
-                    </p>
-                    <p class="mb-1">
-                        <a href="tel:+918825599044" class="hover:text-white transition-colors">+91 882 559 9044</a>
-                    </p>
-                    <p>Chennai, India</p>
-                </div>
-                <div>
-                    <p>© 2024 - 2025 Mufeeda Carpets</p>
-                    <p>All Rights Reserved</p>
-                    <a href="#" class="hover:text-white transition-colors underline-offset-4">Privacy Policy</a>
-                </div>
-            </div>
+          <a href="mailto:mufeeda.carpet@gmail.com" aria-label="Email" class="text-gray-300 hover:text-white transition-colors">
+            <!-- mail svg -->
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+          </a>
         </div>
-    </footer>
 
-    <!-- Link to the JavaScript File -->
-    <script src="script.js"></script>
+        <button id="menu-btn" aria-controls="mobile-menu" aria-expanded="false" class="md:hidden text-white focus:outline-none p-2 border border-transparent hover:border-gray-700 rounded transition-colors cursor-pointer relative z-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="w-full md:hidden">
+      <nav class="flex flex-col gap-6 py-8 border-t border-gray-800 mt-4 text-center text-sm font-serif tracking-widest">
+        <a href="#about" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">About</a>
+        <a href="#gallery" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">Gallery</a>
+        <a href="#contact" class="mobile-link text-gray-300 hover:text-white hover:translate-x-2 transition-all">Contact</a>
+
+        <div class="flex justify-center gap-8 mt-4 pt-6 border-t border-gray-800">
+          <a href="https://wa.me/918122022641" target="_blank" class="text-gray-300 hover:text-green-400">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/mufeeda.carpet/" target="_blank" class="text-gray-300 hover:text-pink-500"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="mailto:mufeeda.carpet@gmail.com" class="text-gray-300 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="px-6 md:px-12 pt-16 pb-20 flex flex-col items-center text-center reveal-on-scroll">
+      <div class="mb-8">
+        <h1 class="font-serif text-4xl md:text-5xl font-bold text-brand-black mb-3">Mufeeda Carpet</h1>
+        <p class="font-inter text-text-light text-lg md:text-xl tracking-tight">Elegance & Comfort for Every Floor.</p>
+      </div>
+
+      <a href="#gallery" class="bg-brand-black text-white text-xxs uppercase tracking-widest font-medium px-8 py-3 rounded-full hover:bg-gray-800 transition-all duration-300 mb-16 inline-block">
+        View Gallery
+      </a>
+
+      <div class="w-full max-w-5xl aspect-[16/9] bg-black rounded-lg relative shadow-xl overflow-hidden group">
+        <video class="w-full h-full object-cover" autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+          <source src="assets/hero-video.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+
+    <section id="about" class="px-6 md:px-12 py-16 max-w-5xl mx-auto scroll-mt-24 reveal-on-scroll">
+      <div class="mb-8">
+        <div class="flex flex-col items-start mb-4">
+          <img src="assets/logo-black.png" alt="Mufeeda Carpet Logo" class="h-10 w-auto object-contain mb-2">
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-black leading-none text-center">Mufeeda<br>Carpet</span>
+        </div>
+        <h2 class="font-bold text-xl md:text-2xl text-brand-black">About Us</h2>
+      </div>
+      <div class="max-w-2xl">
+        <p class="text-sm text-text-light leading-relaxed mb-6">
+          Our journey began with a clear vision — to deliver beautiful, long-lasting carpets at honest prices. Over the 15 years, our passion and experience have transformed what was once a small trading firm into a trusted name in the world of flooring. Today, we proudly offer a diverse range of premium styles, textures, and designs that bring comfort, elegance, and quality to every space we touch.
+        </p>
+      </div>
+    </section>
+
+    <section id="gallery" class="px-6 md:px-12 py-12 max-w-5xl mx-auto flex flex-col gap-24 scroll-mt-24">
+
+      <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 reveal-on-scroll">
+        <div class="flex-1 max-w-md">
+          <h3 class="font-bold text-xl text-brand-black mb-4">Vinyl Flooring for Workspaces</h3>
+          <p class="text-sm text-text-light leading-relaxed">
+            Our vinyl flooring is designed to enhance modern workspaces by combining professional style with long-lasting performance. With a stylish, sleek appearance, low maintenance, and high durability, it withstands daily traffic while keeping the floor looking fresh and professional for years.
+          </p>
+        </div>
+        <div class="flex-1 w-full group">
+          <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 ml-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
+            <source src="assets/vinyl-video.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20 reveal-on-scroll">
+        <div class="flex-1 max-w-md">
+          <h3 class="font-bold text-xl text-brand-black mb-4">2/2 Carpet for Modern Workspaces</h3>
+          <p class="text-sm text-text-light leading-relaxed">
+            Our 2/2 Carpet delivers a clean, modern look ideal for IT companies and start-up offices. Its strong woven texture handles heavy foot traffic, rolling chairs, and daily activity while keeping the space quiet and comfortable.
+          </p>
+        </div>
+        <div class="flex-1 w-full group">
+          <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 mr-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
+            <source src="assets/carpet-video.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 reveal-on-scroll">
+        <div class="flex-1 max-w-md">
+          <h3 class="font-bold text-xl text-brand-black mb-4">Sports & Outdoor Grass Mats</h3>
+          <p class="text-sm text-text-light leading-relaxed">
+            Designed for versatility and performance, our Grass Mats provide a durable, cushioned, and visually distinct solution for play areas, sports fields and outdoor spaces.
+          </p>
+        </div>
+        <div class="flex-1 w-full group">
+          <video class="aspect-square w-full max-w-[400px] mx-auto md:mx-0 ml-auto rounded-lg object-cover transition-transform duration-500 group-hover:scale-[1.02]" autoplay muted loop playsinline>
+            <source src="assets/grass-video.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="py-20 bg-white reveal-on-scroll overflow-hidden">
+      <div class="max-w-4xl mx-auto text-center mb-12 px-6">
+        <h2 class="font-bold text-xl md:text-2xl text-brand-black mb-1">What Clients Say</h2>
+        <p class="text-text-light text-base">Trusted across Tamil Nadu</p>
+      </div>
+
+      <div class="w-full inline-flex flex-nowrap overflow-hidden">
+        <div class="flex gap-6 animate-marquee hover:pause">
+          <!-- testimonial cards (repeated) -->
+          <div class="w-[300px] md:w-[400px] flex-shrink-0 bg-brand-gray p-8 rounded-xl flex flex-col justify-between">
+            <p class="text-sm text-text-light leading-relaxed mb-6 italic">"The customized carpet fitting was perfect. Really changed the vibe of our conference room."</p>
+            <div><p class="font-bold text-sm text-brand-black">Rajeshwari Iyer</p><p class="text-xxs text-text-light mt-0.5">Chennai</p></div>
+          </div>
+          <!-- duplicate a few cards to fill marquee -->
+          <div class="w-[300px] md:w-[400px] flex-shrink-0 bg-brand-gray p-8 rounded-xl flex flex-col justify-between">
+            <p class="text-sm text-text-light leading-relaxed mb-6 italic">"Excellent quality grass mats. We put them on our balcony and they feel very soft."</p>
+            <div><p class="font-bold text-sm text-brand-black">Manoj Kumar</p><p class="text-xxs text-text-light mt-0.5">Coimbatore</p></div>
+          </div>
+          <div class="w-[300px] md:w-[400px] flex-shrink-0 bg-brand-gray p-8 rounded-xl flex flex-col justify-between">
+            <p class="text-sm text-text-light leading-relaxed mb-6 italic">"Prompt delivery and professional installation. The team was very polite and skilled."</p>
+            <div><p class="font-bold text-sm text-brand-black">Deepa Krishnan</p><p class="text-xxs text-text-light mt-0.5">Madurai</p></div>
+          </div>
+          <!-- ... you can repeat as needed -->
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="px-6 md:px-12 py-24 text-center scroll-mt-20 reveal-on-scroll bg-brand-gray">
+      <h2 class="font-bold text-xl md:text-2xl text-brand-black mb-2">Ready to transform your floor?</h2>
+      <p class="text-text-light text-lg mb-8">Contact us for a free consultation today.</p>
+      <a href="https://wa.me/918122022641" target="_blank" class="bg-green-600 text-white text-xs uppercase tracking-widest font-bold px-10 py-4 rounded-full hover:bg-green-700 transition-all duration-300 inline-flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        <span>Chat on WhatsApp</span>
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+      </a>
+    </section>
+  </main>
+
+  <footer class="bg-brand-black text-white px-6 md:px-12 pt-20 pb-10 border-t border-gray-900">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div class="flex flex-col gap-6">
+          <div class="flex items-center gap-3">
+            <img src="assets/logo-white.png" alt="Mufeeda Carpet Logo" class="h-6 w-auto object-contain">
+            <span class="font-sans text-xl font-bold">Mufeeda Carpets</span>
+          </div>
+          <p class="text-gray-400 text-xs leading-loose">
+            We bring comfort and elegance to your spaces with premium flooring solutions. Serving Chennai and Tamil Nadu for over 15 years.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-6 text-xs uppercase tracking-widest">Explore</h4>
+          <ul class="flex flex-col gap-4 text-xs text-gray-400">
+            <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="#gallery" class="hover:text-white transition-colors">Our Gallery</a></li>
+            <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-6 text-xs uppercase tracking-widest">Products</h4>
+          <ul class="flex flex-col gap-4 text-xs text-gray-400">
+            <li><a href="#gallery" class="hover:text-white transition-colors">Vinyl Flooring</a></li>
+            <li><a href="#gallery" class="hover:text-white transition-colors">Office Carpets</a></li>
+            <li><a href="#gallery" class="hover:text-white transition-colors">Grass Mats</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-6 text-xs uppercase tracking-widest">Get in Touch</h4>
+          <div class="flex flex-col gap-4 text-xs text-gray-400">
+            <p class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+              <a href="tel:+918122022641" class="hover:text-white transition-colors">+91 81220 22641</a>
+            </p>
+            <p class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+              <a href="mailto:mufeeda.carpet@gmail.com" class="hover:text-white transition-colors">mufeeda.carpet@gmail.com</a>
+            </p>
+            <p class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.282.11-.705.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.234-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>
+              <a href="https://www.instagram.com/mufeeda.carpet/" target="_blank" class="hover:text-white transition-colors">@mufeeda.carpet</a>
+            </p>
+            <p class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              <span>Chennai, India</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xxs text-gray-500">
+        <p>&copy; 2024 - 2025 Mufeeda Carpet. All Rights Reserved.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+          <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inline script: improved menu + smooth scroll + reveal + header shadow -->
+  <script>
+  // script.js — improved mobile menu toggling, smooth scroll, reveal & header effects
+  (() => {
+    const $ = (s, ctx = document) => ctx.querySelector(s);
+    const $$ = (s, ctx = document) => Array.from(ctx.querySelectorAll(s));
+
+    const menuBtn = $('#menu-btn');
+    const mobileMenu = $('#mobile-menu');
+    const navLinks = $$('nav a, .mobile-link');
+    const revealElements = $$('.reveal-on-scroll');
+    const header = $('header');
+
+    // --- Mobile menu open/close with measured height (no fixed 500px) ---
+    function openMenu() {
+      if (!mobileMenu) return;
+      mobileMenu.style.display = 'block';
+      const height = mobileMenu.scrollHeight + 'px';
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.getBoundingClientRect(); // force layout
+      mobileMenu.style.transition = 'max-height 400ms ease-in-out, opacity 250ms ease-in-out';
+      mobileMenu.style.maxHeight = height;
+      mobileMenu.style.opacity = '1';
+      mobileMenu.classList.add('open');
+      menuBtn && menuBtn.setAttribute('aria-expanded', 'true');
+      mobileMenu.style.pointerEvents = 'auto';
+    }
+
+    function closeMenu() {
+      if (!mobileMenu) return;
+      const height = mobileMenu.scrollHeight + 'px';
+      mobileMenu.style.maxHeight = height;
+      mobileMenu.getBoundingClientRect();
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.style.opacity = '0';
+      menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
+
+      const onTransitionEnd = (e) => {
+        if (e.propertyName === 'max-height' || e.propertyName === 'opacity') {
+          mobileMenu.classList.remove('open');
+          mobileMenu.style.display = 'none';
+          mobileMenu.style.maxHeight = '';
+          mobileMenu.style.transition = '';
+          mobileMenu.style.opacity = '';
+          mobileMenu.style.pointerEvents = 'none';
+          mobileMenu.removeEventListener('transitionend', onTransitionEnd);
+        }
+      };
+      mobileMenu.addEventListener('transitionend', onTransitionEnd);
+    }
+
+    // Attach menu button handler
+    if (menuBtn && mobileMenu) {
+      menuBtn.setAttribute('aria-controls', 'mobile-menu');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenu.style.pointerEvents = 'none';
+      mobileMenu.style.display = 'none';
+
+      menuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (mobileMenu.classList.contains('open')) closeMenu();
+        else openMenu();
+      });
+
+      // Close menu on outside click
+      document.addEventListener('click', (ev) => {
+        if (!mobileMenu.classList.contains('open')) return;
+        const target = ev.target;
+        if (target === menuBtn || menuBtn.contains(target)) return;
+        if (mobileMenu.contains(target)) return;
+        closeMenu();
+      });
+    }
+
+    // --- Smooth Scroll & Auto-Close Menu when clicking anchors ---
+    navLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        const href = this.getAttribute('href') || '';
+        if (!href.startsWith('#')) return;
+        const target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        if (mobileMenu && mobileMenu.classList.contains('open')) closeMenu();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', href);
+      });
+    });
+
+    // --- Reveal on scroll using IntersectionObserver ---
+    if ('IntersectionObserver' in window && revealElements.length) {
+      const revealCallback = (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            observer.unobserve(entry.target);
+          }
+        });
+      };
+      const observer = new IntersectionObserver(revealCallback, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+      revealElements.forEach(el => {
+        el.classList.add('transition-all', 'duration-1000', 'ease-out', 'opacity-0', 'translate-y-10');
+        observer.observe(el);
+      });
+    }
+
+    // --- Header shadow on scroll ---
+    if (header) {
+      const onScroll = () => {
+        if (window.scrollY > 50) header.classList.add('shadow-md');
+        else header.classList.remove('shadow-md');
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  })();
+  </script>
 
 </body>
 </html>

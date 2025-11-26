@@ -1,74 +1,91 @@
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- Variables ---
-    const navLinks = document.querySelectorAll('nav a, .mobile-link');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuBtn = document.getElementById('menu-btn');
-    
-    // --- Mobile Menu Toggle (Simplified) ---
-    if (menuBtn && mobileMenu) {
-        menuBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Good practice
-            // Simply toggle the 'open' class. CSS handles the rest.
-            mobileMenu.classList.toggle('open');
-        });
-    }
+(() => {
+  const $ = (s, ctx = document) => ctx.querySelector(s);
+  const $$ = (s, ctx = document) => Array.from(ctx.querySelectorAll(s));
 
-    // --- Smooth Scrolling & Auto-Close ---
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            
-            // Allow default behavior for non-anchor links
-            if (!targetId || !targetId.startsWith('#')) return;
+  const menuBtn = $('#menu-btn');
+  const mobileMenu = $('#mobile-menu');
+  const navLinks = $$('nav a, .mobile-link');
+  const revealElements = $$('.reveal-on-scroll');
+  const header = $('#main-header');
 
-            e.preventDefault();
-            const targetSection = document.querySelector(targetId);
+  // --- 1. Mobile Menu Logic ---
+  function openMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.add('open');
+    const height = mobileMenu.scrollHeight + 'px';
+    mobileMenu.style.maxHeight = height;
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
 
-            if (targetSection) {
-                // Always close menu when a link is clicked
-                if (mobileMenu) {
-                    mobileMenu.classList.remove('open');
-                }
+  function closeMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.remove('open');
+    mobileMenu.style.maxHeight = '0px';
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
 
-                // Scroll to section
-                targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
+  if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+      if (isOpen) closeMenu();
+      else openMenu();
     });
 
-    // --- Reveal on Scroll Animation ---
-    const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    const revealCallback = (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.remove('opacity-0', 'translate-y-10');
-                entry.target.classList.add('opacity-100', 'translate-y-0');
-                observer.unobserve(entry.target);
-            }
-        });
-    };
-
-    const observer = new IntersectionObserver(revealCallback, {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
+    // Close on outside click
+    document.addEventListener('click', (ev) => {
+      if (!mobileMenu.classList.contains('open')) return;
+      if (ev.target.closest('#menu-btn') || ev.target.closest('#mobile-menu')) return;
+      closeMenu();
     });
 
-    revealElements.forEach(el => {
-        el.classList.add('transition-all', 'duration-1000', 'ease-out', 'opacity-0', 'translate-y-10');
-        observer.observe(el);
+    // FIX: Handle Resize (Prevent menu getting stuck if rotating phone)
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && mobileMenu.classList.contains('open')) {
+        mobileMenu.classList.remove('open');
+        mobileMenu.style.maxHeight = '0px';
+        mobileMenu.style.opacity = '';
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
     });
+  }
 
-    // --- Header Scroll Effect ---
-    const header = document.querySelector('header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('shadow-md');
-        } else {
-            header.classList.remove('shadow-md');
+  // --- 2. Smooth Scroll & Close Menu ---
+  navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      const href = this.getAttribute('href') || '';
+      if (!href.startsWith('#')) return;
+
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        if (mobileMenu && mobileMenu.classList.contains('open')) closeMenu();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', href);
+      }
+    });
+  });
+
+  // --- 3. Reveal on Scroll ---
+  if ('IntersectionObserver' in window && revealElements.length) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
         }
-    });
-});
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    revealElements.forEach(el => observer.observe(el));
+  }
+
+  // --- 4. Header Shadow ---
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+    }, { passive: true });
+  }
+
+})();
